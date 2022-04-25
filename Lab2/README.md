@@ -1,6 +1,12 @@
 # Illinois and New York
+![This is an image](https://github.com/T3ch12et/T3ch12et.github.io/blob/main/Lab2/img/Chicagoarea.png)
+
+
+
 ![This is an image](https://github.com/T3ch12et/T3ch12et.github.io/tree/main/Lab2/img/Chicagoarea.png)
 
+
+https://github.com/T3ch12et/T3ch12et.github.io/blob/main/Lab2/img/Chicagoarea.png
 I decided to compare Illinois and New York together because both of them are expansive cities, yet they both have different Twitter posts in their respective areas. I wanted to explore the differences between them to see if there were any factors that contributed to the differing amounts of Twitter posts in the area. It seems like New York has more Twitter posts than Illinois.
 
 
