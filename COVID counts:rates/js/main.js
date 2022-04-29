@@ -9,7 +9,7 @@ let map = new mapboxgl.Map({
 });
 
 const grades = [10, 100, 1000],
-    colors = ['rgb(255,255,153)', 'rgb(253,141,60)', 'rgb(222,45,38)'],
+    colors = ['rgb(246,216,19)', 'rgb(253,141,60)', 'rgb(222,45,38)'],
     radii = [5, 12, 20];
 
 map.on('load', () => {
