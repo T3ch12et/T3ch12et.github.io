@@ -2,11 +2,13 @@
 
 This assignment shows maps that are created from the data sources of COVID-19 regarding the cases and rates. The data is then made into an interactive map to engage the viewer with what is being presented to them.
 
+## COVID count cases
 ![COVID-19 count cases](https://github.com/T3ch12et/T3ch12et.github.io/blob/main/COVID%20counts:rates/img/COVID-count-map.png)  
 Link to [COVID-19 count cases html](https://github.com/T3ch12et/T3ch12et.github.io/blob/main/COVID%20counts:rates/covid19cases.html).  
 Link to [COVID-19 count cases map](https://github.com/T3ch12et/T3ch12et.github.io/blob/main/COVID%20counts:rates/img/COVID-count-map.png).
 
 
+## COVID rate
 ![COVID-19 rates](https://github.com/T3ch12et/T3ch12et.github.io/blob/main/COVID%20counts:rates/img/COVID-rates-map.png)
 Link to [COVID-19 rate html](https://github.com/T3ch12et/T3ch12et.github.io/blob/main/COVID%20counts:rates/covid19rates.html).  
 Link to [COVID-19 rate map](https://github.com/T3ch12et/T3ch12et.github.io/blob/main/COVID%20counts:rates/img/COVID-rates-map.png).  
