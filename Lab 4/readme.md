@@ -3,7 +3,7 @@
 This assignment shows tilesmaps that are created from the QGIS. Four different tilemaps have been created. 
 
 ## Custom Tilemap
-![Custom Tilemap](https://github.com/T3ch12et/T3ch12et.github.io/blob/main/COVID%20counts:rates/img/COVID-count-map.png)  
+![Custom Tilemap](https://github.com/T3ch12et/T3ch12et.github.io/blob/main/Lab%204/img/uw3.png)  
 
 
 ### Zoom Level Increase
