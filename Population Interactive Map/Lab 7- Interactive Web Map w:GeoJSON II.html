@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <title>Geog465 Lab7</title>
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"/>
+</head>
+<body> 
+       <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script> 
+       <script src="KCPop2000.js"></script>
+       <div id="mapid" style="width: 600px; height: 400px; margin: auto"></div>
+       <script>
+                var mymap = L.map('mapid', {center: [47.6062, -122.3321], zoom: 10});
+                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(mymap);
+
+                function classification(x){
+                        return x > 5000? '#006d2c':
+                        x > 4000? '#2ca25f':
+                        x > 3000? '#66c2a4':
+                        x > 2000? '#99d8c9':
+                        x > 1000? '#ccece6': '#a6bddb';}
+                
+                function popStyle(feature){
+                    return {fillColor:classification(feature.properties.TotPop),
+                    weight:1,
+                    opacity:1,
+                    color:'white',
+                    fillOpacity:0.85};}
+
+                    var pop2000Layer = L.geoJSON(myData, {style:popStyle, onEachFeature:popUp2000}).addTo(mymap);
+
+                function newStyle(e) {var layer = e.target; layer.setStyle({weight:5});}
+                function oldStyle(e) {pop2000Layer.resetStyle(e.target);}
+
+                function popUp2000(feature,layer){
+                layer.bindPopup('Census tract: '+ feature.properties.NAME + '<br>' + 'Total Population: '+feature.properties.TotPop);
+                layer.on('mouseover', function(){layer.openPopup();});
+                layer.on('mouseover', newStyle);
+                layer.on('mouseout', oldStyle);
+                layer.on('mouseout', function(){layer.closePopup();});
+                }; 
+
+
+                
+
+                
+        
+        </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <!--shows title and imports in the leaflet program to find CSS file it needs for leaflet-->
+          <title>Geog465 Lab 7</title>
+          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>
+</head>
+<body>
+<!--tells the browser where to find the JavaScript file thsat it needs for leaflet-->
+          <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
+
+<!--add external GeoJSON source and defines the map height, width, and size  -->
+          <script src = "KCPop2000.js"></script>
+          <div id="mapid" style="width: 800px; height: 600px; margin:auto;"></div>
+
+<!--constructs the map  centering the point at Seattle in var 'mymap' and provides the basemap tile--> 
+<!--creates the functions for the outlines of the tracts and assigned color values in popStyle and classifcation--> 
+<!--function newStyle and oldStyle creates the mouse hovering popup to show census tract data and population in 2000--> 
+<!--popUp2000 is made showing the details of data the census tract holds, mapping values accordingly for total population in 2000--> 
+<!--popUp2010 is made showing the details of data the census tract holds, mapping values accordingly for total population in 2010--> 
+<!--function tennewStyle and tenoldStyle creates the mouse hovering popup to show census tract data and population in 2010--> 
+<!--popUp2010 is made showing the details of data the census tract holds, mapping values accordingly for total population in 2010--> 
+<!--creates the functions for the outlines of the tracts and assigned color values in povStyle and povclass-->
+<!--povUp200 is made showing the details of data the census tract holds, mapping values accordingly for poverty percentage in 2012-2016--> 
+<!--function povnewStyle and povoldStyle creates the mouse hovering popup to show census tract data and poverty perentage in 2012-2016-->
+<!--varpop2000Layer, varpop2010Layer, and povper200Layer passes in certain variables. TotPop and E01003097 for population, and PP2005
+for poverty percentage respectively passing in these values stored in the GEOJSON file. The onEachFeature passes in the mouse hovering as well
+to make everything activate-->
+<!--$.getJSON loads GeoJSON into document and passes it into the pop2010Layer and povper200Layer objects -->
+<!--function pop2000, pop2010, and povper200 adds three different functions to add one layer to the map and remove the other two-->
+<script> 
+   
+        var mymap = L.map('mapid', { center:[47.6062, -122.3321],  zoom:10 });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mymap);
+        function popStyle(feature){
+                return {fillColor:classification(feature.properties.TotPop),
+                weight:1,
+                opacity:1,
+                color:'white',
+                fillOpacity:0.85};}     
+        function classification(x){
+                return x > 5000? '#006d2c':
+                x > 4000? '#2ca25f':
+                x > 3000? '#66c2a4':
+                x > 2000? '#99d8c9':
+                x > 1000? '#ccece6': '#a6bddb';}
+
+        function newStyle(e) {var layer = e.target; layer.setStyle({weight:5});}
+        function oldStyle(e) {pop2000Layer.resetStyle(e.target);}
+
+        function popUp2000(feature,layer){
+        layer.bindPopup('Census tract: '+ feature.properties.NAME + '<br>' + 'Total Population: '+feature.properties.TotPop);
+        layer.on('mouseover', function(){layer.openPopup();});
+        layer.on('mouseover', newStyle);
+        layer.on('mouseout', oldStyle);
+        layer.on('mouseout', function(){layer.closePopup();});
+        }; 
+
+        function tennewStyle(e) {var layer = e.target; layer.setStyle({weight:5});}
+        function tenoldStyle(e) {pop2010Layer.resetStyle(e.target);}
+
+        function popUp2010(feature,layer){
+        layer.bindPopup('Census tract: '+ feature.properties.NAME + '<br>' + 'Total Population: '+feature.properties.E01003097);
+        layer.on('mouseover', function(){layer.openPopup();});
+        layer.on('mouseover', tennewStyle);
+        layer.on('mouseout', tenoldStyle);
+        layer.on('mouseout', function(){layer.closePopup();});
+        }; 
+
+        function povStyle(feature){
+                return {fillColor:povclass(feature.properties.PP2005),
+                weight:1,
+                opacity:1,
+                color:'gray',
+                fillOpacity:0.85};}  
+        function povclass(x){
+                return x > 96? '#bd0026':
+                x > 80? '#f03b20':
+                x > 64? '#fd8d3c':
+                x > 48? '#feb24c':
+                x > 32? '#fed976':
+                x > 16? '#FFFF8F': '#FFFAA0';}
+
+        function povnewStyle(e) {var layer = e.target; layer.setStyle({weight:5});}
+        function povoldStyle(e) {povper200Layer.resetStyle(e.target);}
+
+
+        function povUp200(feature,layer){
+        layer.bindPopup('Census tract: '+ feature.properties.GEO_ID_TRT + '<br>' + 'Poverty Percentage: '+feature.properties.PP2005);
+        layer.on('mouseover', function(){layer.openPopup();});
+        layer.on('mouseover', povnewStyle);
+        layer.on('mouseout', povoldStyle);
+        layer.on('mouseout', function(){layer.closePopup();});
+        }; 
+
+        var pop2000Layer = L.geoJSON(myData, {style:popStyle, onEachFeature:popUp2000});
+        var pop2010Layer = L.geoJSON(false, {style:function (feature) {return { fillColor: classification(feature.properties.E01003097), weight: 1, opacity: 1, color: 'white', fillOpacity: 0.85}}, onEachFeature:popUp2010});
+        var povper200Layer = L.geoJSON(false, {style:povStyle, onEachFeature:povUp200});
+        
+        $.getJSON("https://gisdata.kingcounty.gov/arcgis/rest/services/OpenDataPortal/census__acs/MapServer/2593/query?outFields=*&where=1%3D1&f=geojson", function(data){pop2010Layer.addData(data); });
+        $.getJSON("https://gisdata.kingcounty.gov/arcgis/rest/services/OpenDataPortal/census___base/MapServer/2549/query?outFields=*&where=1%3D1&f=geojson", function(data){povper200Layer.addData(data); });
+
+        function pop2000(){
+            pop2000Layer.addTo(mymap);
+            mymap.removeLayer(pop2010Layer);
+            mymap.removeLayer(povper200Layer);
+        }
+
+        function pop2010(){
+            pop2010Layer.addTo(mymap);
+            mymap.removeLayer(pop2000Layer);
+            mymap.removeLayer(povper200Layer);
+        }
+
+        function povper200(){
+            povper200Layer.addTo(mymap);
+            mymap.removeLayer(pop2010Layer);
+            mymap.removeLayer(pop2000Layer);
+        }
+</script>
+
+<!--these are the buttons that switch data between population 2000 and 2010 as well as poverty prcentage--> 
+<button onclick="pop2000()">Total Population in 2000</button>
+<button onclick="pop2010()">Total Population in 2010</button>
+<button onclick="povper200()">Poverty Percentage in ACS 2012-2016</button>  
+</body>
+</html>

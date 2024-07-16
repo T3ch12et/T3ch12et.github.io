@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+          <title>Geog465 Lab 7</title>
+          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>
+</head>
+<body>
+          <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
+
+<!--add external GeoJSON source  -->
+          <script src = "KCPop2000.js"></script>
+          <div id="mapid" style="width: 800px; height: 600px; margin:auto;"></div>
+<script>     
+        var mymap = L.map('mapid', { center:[47.6062, -122.3321],  zoom:10 });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mymap);
+        function popStyle(feature){
+                return {fillColor:classification(feature.properties.TotPop),
+                weight:1,
+                opacity:1,
+                color:'white',
+                fillOpacity:0.85};}     
+        function classification(x){
+                return x > 5000? '#006d2c':
+                x > 4000? '#2ca25f':
+                x > 3000? '#66c2a4':
+                x > 2000? '#99d8c9':
+                x > 1000? '#ccece6': '#a6bddb';}
+
+        function newStyle(e) {var layer = e.target; layer.setStyle({weight:5});}
+        function oldStyle(e) {pop2000Layer.resetStyle(e.target);}
+
+        function popUp2000(feature,layer){
+        layer.bindPopup('Census tract: '+ feature.properties.NAME + '<br>' + 'Total Population: '+feature.properties.TotPop);
+        layer.on('mouseover', function(){layer.openPopup();});
+        layer.on('mouseover', newStyle);
+        layer.on('mouseout', oldStyle);
+        layer.on('mouseout', function(){layer.closePopup();});
+        }; 
+
+        function tennewStyle(e) {var layer = e.target; layer.setStyle({weight:5});}
+        function tenoldStyle(e) {pop2010Layer.resetStyle(e.target);}
+
+        function popUp2010(feature,layer){
+        layer.bindPopup('Census tract: '+ feature.properties.NAME + '<br>' + 'Total Population: '+feature.properties.E01003097);
+        layer.on('mouseover', function(){layer.openPopup();});
+        layer.on('mouseover', tennewStyle);
+        layer.on('mouseout', tenoldStyle);
+        layer.on('mouseout', function(){layer.closePopup();});
+        }; 
+
+        var pop2000Layer = L.geoJSON(myData, {style:popStyle, onEachFeature:popUp2000});
+        var pop2010Layer = L.geoJSON(false, {style:function (feature) {return { fillColor: classification(feature.properties.E01003097), weight: 1, opacity: 1, color: 'white', fillOpacity: 0.85}}, onEachFeature:popUp2010});
+        
+        $.getJSON("https://gisdata.kingcounty.gov/arcgis/rest/services/OpenDataPortal/census__acs/MapServer/2593/query?outFields=*&where=1%3D1&f=geojson", function(data){pop2010Layer.addData(data); });
+
+        function pop2000(){
+            pop2000Layer.addTo(mymap);
+            mymap.removeLayer(pop2010Layer);
+        }
+
+        function pop2010(){
+            pop2010Layer.addTo(mymap);
+            mymap.removeLayer(pop2000Layer);
+        }
+</script>
+<button onclick="pop2000()">Total Population in 2000</button>
+<button onclick="pop2010()">Total Population in 2010</button> 
+</body>
+</html>
